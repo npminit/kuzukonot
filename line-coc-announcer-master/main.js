@@ -46,7 +46,12 @@ const moment = require('moment');
 
 var LogMessage = `
            --------------
-           |Line War Bot|`
+           |Line War Bot|
+      ------------------------
+     
+
+  Been announcing coc wars since ${moment("2017-08-25T23:13:33-05:00").format("MMM Do YYYY")}
+`
 console.log(chalk.green(LogMessage));
 
 // Used to check for any updates

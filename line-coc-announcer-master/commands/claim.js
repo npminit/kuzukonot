@@ -5,20 +5,13 @@ exports.run = (client, message, args) => {
 
   var groups = Storage.getItemSync("updateGroups");
 
-<<<<<<< HEAD
   var clanTag = args[0].toUpperCase().replace(/O/g, '0');
-=======
-  var clanTag = args[0].toUpperCase().replace(/O/g, '0')
->>>>>>> 198fc561a207bab69f8e4f12a855d06c84c941a5
   let changed = false;
-  let oldClan;
+  var oldClan = checkClan(message.group.id);
 
-<<<<<<< HEAD
-  console.log("command ran")
+  if (oldClan == clanTag) return message.reply("you have already claimed this clan o.o");
 
-=======
->>>>>>> 198fc561a207bab69f8e4f12a855d06c84c941a5
-  if (!clanTag) {
+  if (!clanTag) { 
     message.reply("specify a clantag");
   } else  {
     groups.forEach((group, index) => {
@@ -27,7 +20,6 @@ exports.run = (client, message, args) => {
       // group[1] clantag
 
       if (group[0] == message.group.id) {
-        oldClan == group[1];
         groups[index] = `${message.group.id}//${clanTag}`
         Storage.setItemSync("updateGroups", groups);
         changed = true;
@@ -47,8 +39,15 @@ exports.run = (client, message, args) => {
           if (changed == false) {
             message.reply(`this group will recieve updates for ${data.clan.name}`);
           } else {
-            message.reply(`this group will recieve updates for ${data.clan.name} instead of ${clanData[oldClan].name}`);
+            message.reply(`this group will now recieve updates for ${data.clan.name} instead of ${clanData[oldClan].name}`);
           }
+          parseCurrentWar(data, clanTag);
+
+          clanData[clanTag].updateInterval = setInterval(() => {
+            funcs.getCurrentWar(clanTag, (data, clanTag) => {
+              parseCurrentWar(data, clanTag);
+            })
+          }, 1000 * config.updateInterval);
         } else if (data.reason == 'accessDenied') {
           message.reply(`the clan you claimed currently has a private warlog use the refresh command when its public`);
         } else if (data.reason == 'notFound') {
@@ -73,8 +72,10 @@ exports.run = (client, message, args) => {
           if (changed == false) {
             message.reply(`this group will recieve updates for ${data.clan.name}`);
           } else {
-            message.reply(`this group will recieve updates for ${data.clan.name} instead of ${clanData[oldClan].name}`);
+            message.reply(`this group will now recieve updates for ${data.clan.name} instead of ${clanData[oldClan].name}`);
           }
+          parseCurrentWar(data, clanTag);
+
         } else if (data.reason == 'accessDenied') {
           message.reply(`the clan you claimed currently has a private warlog use the refresh command when its public`);
         } else if (data.reason == 'notFound') {

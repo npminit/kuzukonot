@@ -69,9 +69,7 @@ global.discordAttackMessage = (WarData, attackData) => {
 
 global.parseCurrentWar = (war, cT) => {
   // Making sure we actually have war data to mess with lol
-
-  console.log(war);
-
+  
   if (war && war.reason != 'notFound' && war.reason != 'accessDenied' && war.state != 'notInWar') {
     let sha1 = crypto.createHash('sha1')
     let opponentTag = war.opponent.tag
@@ -83,7 +81,7 @@ global.parseCurrentWar = (war, cT) => {
 
     var WarData = Storage.getItemSync(warId);
     if (!WarData) {
-      WarData = { lastReportedAttack: 0, prepDayReported: false, clanCastleReported: false, battleDayReported: false, lastHourReported: false, finalMinutesReported: false }
+      WarData = { lastReportedAttack: 0, prepDayReported: false, clanCastleReported: false, battleDayReported: false, lastHourReported: false, finalMinutesReported: false, warEndedReported: false };
 
       var warCalls = new Array(war.teamSize + 1);
       warCalls.fill("empty");
@@ -342,6 +340,26 @@ global.parseCurrentWar = (war, cT) => {
       WarData.finalMinutesReported = true
       discordReportMessage(WarData, finalMinutes)
 
+    }
+    if (!WarData.warEndedReported && war.state == "warEnded") {
+      WarData.warEndedReported = true
+
+      var WinMessage;
+
+      if (WarData.stats.clan.stars > WarData.stats.opponent.star) {
+        WinMessage = "you won!"
+      } else if (WarData.stats.clan.stars < WarData.stats.opponent.star) {
+        WinMessage = "you lost! D:"
+      } else if (WarData.stats.clan.stars == WarData.stats.opponent.star) {
+        WinMessage = "It was a draw o.o"
+      }
+
+      discordReportMessage(WarData, {
+        title: `War Ended!`,
+        body: `${war.clan.name} vs ${war.opponent.name}
+        ${WinMessage}
+        Stars: ${WarData.stats.clan.stars} vs ${WarData.stats.opponent.stars}`
+      })
     }
     let reportFrom = WarData.lastReportedAttack
 

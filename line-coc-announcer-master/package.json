@@ -1,0 +1,22 @@
+{
+  "name": "discord-coc-announcer",
+  "version": "1.0.0",
+  "description": "discord bot for announcing clash of clan war stats",
+  "main": "index.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.5.0",
+    "chalk": "^2.1.0",
+    "clash-of-clans-api": "^0.4.0",
+    "line.js": "^3.2.6",
+    "moment": "^2.18.1",
+    "node-persist": "^2.1.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "simple-get": "^2.7.0"
+  }
+}
